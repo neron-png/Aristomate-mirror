@@ -430,27 +430,20 @@
   
     setContext(key, { open, close });
   
-    let isMounted = false;
-  
    // @ts-ignore
      $: {
-      if (isMounted && isOpen) {
+      console.log(isOpen);
+      if (isOpen) {
         // @ts-ignore
         if (isFunction(show)) {
           open(show);
         } else {
+          isOpen = false;
           close();
         }
       }
     }
   
-    svelte.onDestroy(() => {
-      if (isMounted) close();
-    });
-  
-    svelte.onMount(() => {
-      isMounted = true;
-    });
   </script>
   
   

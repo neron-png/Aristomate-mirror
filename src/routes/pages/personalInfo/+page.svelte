@@ -86,8 +86,7 @@
 		{/await}
 		<Settings logOut = {logOut} showPopup = {showPopup}/>
 
-		<Modal isOpen = {isOpen} show={$modal} >
-		</Modal>
+		<Modal isOpen = {isOpen} show={$modal} />
 
 	</ion-content>
 
