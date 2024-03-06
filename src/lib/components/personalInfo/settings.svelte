@@ -5,10 +5,23 @@
 	 * @type {any}
 	 */
 	 export let logOut;
+
+	/**
+	 * @type {any}
+	 */
+	 export let showPopup;
+	 
 </script>
 
 <ion-card>
 	<ion-card-content>
+
+
+		<ion-item button on:click={showPopup}>
+			<ion-icon size="small" icon={allIonicIcons.language} />
+			<ion-label class="ion-padding-start">Γλώσσα</ion-label>
+			<ion-icon size="small" icon={allIonicIcons.chevronForwardCircle} />
+		</ion-item>
 
 		<ion-item button href="/about">
 			<ion-icon size="small" icon={allIonicIcons.people} />

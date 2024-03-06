@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
 	import { neoUniversisGet } from '$lib/dataService';
 	import { invalidateAuth } from '$lib/authentication/authValidator';
 	import { goto } from '$app/navigation';
@@ -7,6 +7,10 @@
 	import { Capacitor } from '@capacitor/core';
 	import Settings from '$components/personalInfo/settings.svelte';
 	import ErrorLandingCard from '$components/errorLanding/ErrorLandingCard.svelte';
+	import Popup from '$components/language/Popup.svelte';
+	import Modal from '$components/language/Modal.svelte';
+	import { modal } from '$components/language/stores.js';
+	
 
 	// Keep personal info
 
@@ -22,6 +26,7 @@
 	let gender = '';
 	let departmentName = '';
 	let semester = '';
+	let isOpen = false;
 
 	// Get personal details and department details
 
@@ -49,6 +54,11 @@
         goto("/login");
     }
 
+	function showPopup() {
+		isOpen = true;
+		modal.set(Popup);
+	};
+
 </script>
 
 
@@ -74,7 +84,10 @@
 		{:catch error}
 			<ErrorLandingCard errorMsg={error.message}/>
 		{/await}
-		<Settings logOut = {logOut} />
+		<Settings logOut = {logOut} showPopup = {showPopup}/>
+
+		<Modal isOpen = {isOpen} show={$modal} >
+		</Modal>
 
 	</ion-content>
 
