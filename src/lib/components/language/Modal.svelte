@@ -542,7 +542,7 @@
   
     .content {
       position: relative;
-      padding: 1rem;
+
       max-height: calc(100vh - 4rem);
       overflow: auto;
     }
@@ -566,6 +566,7 @@
       transition: transform 0.2s cubic-bezier(0.25, 0.1, 0.25, 1),
         background 0.2s cubic-bezier(0.25, 0.1, 0.25, 1);
       appearance: none;
+      transform: scale(0.5);
     }
   
     .close:before,
@@ -598,7 +599,7 @@
     }
   
     .close:active {
-      transform: scale(0.5);
+      transform: scale(0.4);
     }
   </style>
   
