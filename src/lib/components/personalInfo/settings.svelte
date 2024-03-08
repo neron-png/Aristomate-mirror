@@ -1,23 +1,18 @@
 <script>
 	import * as allIonicIcons from 'ionicons/icons';
-	
+	import Modal, {getModal} from '$components/language/Modal.svelte'
+
 	/**
 	 * @type {any}
 	 */
 	 export let logOut;
-
-	/**
-	 * @type {any}
-	 */
-	 export let showPopup;
-	 
 </script>
 
 <ion-card>
 	<ion-card-content>
-
-
-		<ion-item button on:click={showPopup}>
+		<!-- svelte-ignore a11y-no-static-element-interactions -->
+		<!-- svelte-ignore a11y-click-events-have-key-events -->
+		<ion-item button on:click={()=>getModal().open()}>
 			<ion-icon size="small" icon={allIonicIcons.language} />
 			<ion-label class="ion-padding-start">Γλώσσα</ion-label>
 			<ion-icon size="small" icon={allIonicIcons.chevronForwardCircle} />
@@ -57,7 +52,8 @@
 
 	</ion-card>
 
-
+	<!-- the modal without an `id` -->
+	<Modal />
 
 	<style>
 

@@ -1,605 +1,143 @@
-<!-- v1.4.0 -->
+<script context="module" lang="ts">
+	let onTop: null;   //keeping track of which open modal is on top
 
-<script context="module">
-    /**
-     * Create a Svelte component with props bound to it.
-     * @type {(component: Component, props: Record<string, any>) => Component}
-     */
-    export function bind(Component, props = {}) {
-      return function ModalComponent(/** @type {{ props: any; }} */ options) {
-        return new Component({
-          ...options,
-          props: {
-            ...props,
-            ...options.props,
-          },
-        });
-      };
-    }
-  </script>
-  
-  <script>
-    import * as svelte from 'svelte';
-    import { fade } from 'svelte/transition';
-    import { createEventDispatcher } from 'svelte';
-  
-    const dispatch = createEventDispatcher();
-  
-    const baseSetContext = svelte.setContext;
-    
-    /**
-     * A basic function that checks if a node is tabbale
-     */
-    const baseIsTabbable = (/** @type {{ tabIndex: number; hidden: any; disabled: any; style: { display: string; }; type: string;
-                                         offsetWidth: any; offsetHeight: any; getClientRects: () => { (): any; new (): any; length: any; }; }} */ node) => (
-      node.tabIndex >= 0 && 
-      !node.hidden && 
-      !node.disabled && 
-      node.style.display !== "none" && 
-      node.type !== "hidden" &&
-      Boolean(node.offsetWidth || node.offsetHeight || node.getClientRects().length)
-    );
-  
-    /**
-     * A function to determine if an HTML element is tabbable
-     * @type {((node: Element) => boolean)}
-     */
-    // @ts-ignore
-    export let isTabbable = baseIsTabbable;
-  
-    /**
-     * Svelte component to be shown as the modal
-     * @type {Component | null}
-     */
-    export let show = null;
+	let modal: { open: () => void; close: () => void; };
+	
+	// 	returns an object for the modal specified by `id`, which contains the API functions (`open` and `close` )
+	export function getModal(){
+		return modal;
+	}
+</script>
 
-    /** @type {any} */
-    export let isOpen;
-  
-    /**
-     * Svelte context key to reference the simple modal context
-     * @type {string}
-     */
-    export let key = 'simple-modal';
-  
-    /**
-     * Accessibility label of the modal
-     * @see https://www.w3.org/TR/wai-aria-1.1/#aria-label
-     * @type {string | null}
-     */
-    export let ariaLabel = null;
-  
-    /**
-     * Element ID holding the accessibility label of the modal
-     * @see https://www.w3.org/TR/wai-aria-1.1/#aria-labelledby
-     * @type {string | null}
-     */
-    export let ariaLabelledBy = null;
-  
-    /**
-     * Whether to show a close button or not
-     * @type {Component | boolean}
-     */
-    export let closeButton = true;
-  
-    /**
-     * Whether to close the modal on hitting the escape key or not
-     * @type {boolean}
-     */
-    export let closeOnEsc = true;
-  
-    /**
-     * Whether to close the modal upon an outside mouse click or not
-     * @type {boolean}
-     */
-    export let closeOnOuterClick = true;
-  
-    /**
-     * CSS for styling the background element
-     * @type {Record<string, string | number>}
-     */
-    export let styleBg = {};
-  
-    /**
-     * CSS for styling the window wrapper element
-     * @type {Record<string, string | number>}
-     */
-    export let styleWindowWrap = {};
-  
-    /**
-     * CSS for styling the window element
-     * @type {Record<string, string | number>}
-     */
-    export let styleWindow = {};
-  
-    /**
-     * CSS for styling the content element
-     * @type {Record<string, string | number>}
-     */
-    export let styleContent = {};
-  
-    /**
-     * CSS for styling the close element
-     * @type {Record<string, string | number>}
-     */
-    export let styleCloseButton = {};
-  
-    /**
-     * Class name for the background element
-     * @type {string | null}
-     */
-    export let classBg = null;
-  
-    /**
-     * Class name for window wrapper element
-     * @type {string | null}
-     */
-    export let classWindowWrap = null;
-  
-    /**
-     * Class name for window element
-     * @type {string | null}
-     */
-    export let classWindow = null;
-  
-    /**
-     * Class name for content element
-     * @type {string | null}
-     */
-    export let classContent = null;
-  
-    /**
-     * Class name for close element
-     * @type {string | null}
-     */
-    export let classCloseButton = null;
-  
-    /**
-     * Do not apply default styles to the modal
-     * @type {boolean}
-     */
-    export let unstyled = false;
-  
-    /**
-     * The setContext() function associated with this library
-     * @description If you want to bundle simple-modal with its own version of
-     * Svelte you have to pass `setContext()` from your main app to simple-modal
-     * using this parameter
-     * @see https://svelte.dev/docs#run-time-svelte-setcontext
-     * @type {(key: any, context: any) => void}
-     */
-    export let setContext = baseSetContext;
-  
-    /**
-     * Transition function for the background element
-     * @see https://svelte.dev/docs#transition_fn
-     * @type {(node: Element, parameters: BlurParams) => TransitionConfig}
-     */
-    export let transitionBg = fade;
-  
-    /**
-     * Parameters for the background element transition
-     * @type {BlurParams}
-     */
-    export let transitionBgProps = { duration: 250 };
-  
-    /**
-     * Transition function for the window element
-     * @see https://svelte.dev/docs#transition_fn
-     * @type {(node: Element, parameters: BlurParams) => TransitionConfig}
-     */
-    export let transitionWindow = transitionBg;
-  
-    /**
-     * Parameters for the window element transition
-     * @type {BlurParams}
-     */
-    export let transitionWindowProps = transitionBgProps;
-  
-    /**
-     * If `true` elements outside the modal can be focused
-     * @type {boolean}
-     */
-    export let disableFocusTrap = false;
-  
-    const defaultState = {
-      ariaLabel,
-      ariaLabelledBy,
-      closeButton,
-      closeOnEsc,
-      closeOnOuterClick,
-      styleBg,
-      styleWindowWrap,
-      styleWindow,
-      styleContent,
-      styleCloseButton,
-      classBg,
-      classWindowWrap,
-      classWindow,
-      classContent,
-      classCloseButton,
-      transitionBg,
-      transitionBgProps,
-      transitionWindow,
-      transitionWindowProps,
-      disableFocusTrap,
-      isTabbable,
-      unstyled,
-    };
-    let state = { ...defaultState };
+<!-- svelte-ignore a11y-no-static-element-interactions -->
+<script lang="ts">
+  import VectorGreece from "$lib/components/language/Greece.svg"
+  import VectorUSA from "$lib/components/language/USA.svg"
+
+  function flagClick(this: any)
+  {
+    console.log(this.id);
+    close();
+  }
     
-    /**
-	 * @type {null}
-	 */
-    let Component = null;
-  
-    /**
-	 * @type {HTMLDivElement}
-	 */
-    let background;
-    /**
-	 * @type {HTMLDivElement}
-	 */
-    let wrap;
-    let modalWindow;
-    /**
-	 * @type {number}
-	 */
-    let scrollY;
-    /**
-	 * @type {string}
-	 */
-    let cssBg;
-    /**
-	 * @type {string}
-	 */
-    let cssWindowWrap;
-    /**
-	 * @type {string}
-	 */
-    let cssWindow;
-    /**
-	 * @type {string}
-	 */
-    let cssContent;
-    /**
-	 * @type {string}
-	 */
-    let cssCloseButton;
-    /**
-	 * @type {((node: Element, parameters: BlurParams) => TransitionConfig) | ((arg0: HTMLDivElement, arg1: BlurParams) => __sveltets_2_SvelteTransitionReturnType)}
-	 */
-    let currentTransitionBg;
-    /**
-	 * @type {((node: Element, parameters: BlurParams) => TransitionConfig) | ((arg0: HTMLDivElement, arg1: BlurParams) => __sveltets_2_SvelteTransitionReturnType)}
-	 */
-    let currentTransitionWindow;
-    /**
-	 * @type {string}
-	 */
-    let prevBodyPosition;
-    /**
-	 * @type {string}
-	 */
-    let prevBodyOverflow;
-    /**
-	 * @type {string}
-	 */
-    let prevBodyWidth;
-    /**
-	 * @type {any}
-	 */
-    let outerClickTarget;
-  
-    const camelCaseToDash = (/** @type {string} */ str) =>
-      str.replace(/([a-zA-Z])(?=[A-Z])/g, '$1-').toLowerCase();
-  
-    const toCssString = (/** @type {Record<string, string | number>} */ props) =>
-      props
-        ? Object.keys(props).reduce(
-            (str, key) => `${str}; ${camelCaseToDash(key)}: ${props[key]}`,
-            ''
-          )
-        : '';
-  
-    const isFunction = (/** @type {{ constructor: any; call: any; apply: any; }} */ f) => !!(f && f.constructor && f.call && f.apply);
-  
-    const updateStyleTransition = () => {
-      cssBg = toCssString(
-        Object.assign(
-          {},
-          {
-            width: window.innerWidth,
-            height: window.innerHeight,
-          },
-          state.styleBg
-        )
-      );
-      cssWindowWrap = toCssString(state.styleWindowWrap);
-      cssWindow = toCssString(state.styleWindow);
-      cssContent = toCssString(state.styleContent);
-      cssCloseButton = toCssString(state.styleCloseButton);
-      currentTransitionBg = state.transitionBg;
-      currentTransitionWindow = state.transitionWindow;
-    };
-  
-    const toVoid = () => {};
-    let onOpen = toVoid;
-    let onClose = toVoid;
-    let onOpened = toVoid;
-    let onClosed = toVoid;
-  
-    const open = (/** @type {any} */ NewComponent, newProps = {}, options = {}, callback = {}) => {
-      Component = bind(NewComponent, newProps);
-      state = { ...defaultState, ...options };
-      updateStyleTransition();
-      disableScroll();
-      onOpen = (/** @type {any} */ event) => {
-        // @ts-ignore
-        if (callback.onOpen) callback.onOpen(event);
-        /**
-         * The open event is fired right before the modal opens
-         * @event {void} open
-         */
-        dispatch('open');
-        /**
-         * The opening event is fired right before the modal opens
-         * @event {void} opening
-         * @deprecated Listen to the `open` event instead
-         */
-        dispatch('opening'); // Deprecated. Do not use!
-      };
-      onClose = (/** @type {any} */ event) => {
-        // @ts-ignore
-        if (callback.onClose) callback.onClose(event);
-        /**
-         * The close event is fired right before the modal closes
-         * @event {void} close
-         */
-        dispatch('close');
-        /**
-         * The closing event is fired right before the modal closes
-         * @event {void} closing
-         * @deprecated Listen to the `close` event instead
-         */
-        dispatch('closing'); // Deprecated. Do not use!
-      };
-      onOpened = (/** @type {any} */ event) => {
-        // @ts-ignore
-        if (callback.onOpened) callback.onOpened(event);
-        /**
-         * The opened event is fired after the modal's opening transition
-         * @event {void} opened
-         */
-        dispatch('opened');
-      };
-      onClosed = (/** @type {any} */ event) => {
-        // @ts-ignore
-        if (callback.onClosed) callback.onClosed(event);
-        /**
-         * The closed event is fired after the modal's closing transition
-         * @event {void} closed
-         */
-        dispatch('closed');
-      };
-    };
-  
-    const close = (callback = {}) => {
-      if (!Component) return;
-      // @ts-ignore
-      onClose = callback.onClose || onClose;
-      // @ts-ignore
-      onClosed = callback.onClosed || onClosed;
-      Component = null;
-      enableScroll();
-    };
-  
-    const handleOuterMousedown = (/** @type {{ target: any; }} */ event) => {
-      if (
-        state.closeOnOuterClick &&
-        (event.target === background || event.target === wrap)
-      )
-        outerClickTarget = event.target;
-    };
-  
-    const handleOuterMouseup = (/** @type {{ target: any; preventDefault: () => void; }} */ event) => {
-      if (state.closeOnOuterClick && event.target === outerClickTarget) {
-        event.preventDefault();
-        close();
-      }
-    };
-  
-    const disableScroll = () => {
-      scrollY = window.scrollY;
-      prevBodyPosition = document.body.style.position;
-      prevBodyOverflow = document.body.style.overflow;
-      prevBodyWidth = document.body.style.width;
-      document.body.style.position = 'fixed';
-      document.body.style.top = `-${scrollY}px`;
-      document.body.style.overflow = 'hidden';
-      document.body.style.width = '100%';
-    };
-  
-    const enableScroll = () => {
-      document.body.style.position = prevBodyPosition || '';
-      document.body.style.top = '';
-      document.body.style.overflow = prevBodyOverflow || '';
-      document.body.style.width = prevBodyWidth || '';
-      window.scrollTo(0, scrollY);
-    };
-  
-    setContext(key, { open, close });
-  
-   // @ts-ignore
-     $: {
-      console.log(isOpen);
-      if (isOpen) {
-        // @ts-ignore
-        if (isFunction(show)) {
-          open(show);
-        } else {
-          isOpen = false;
-          close();
-        }
-      }
-    }
-  
-  </script>
-  
-  
-  {#if Component}
-    <!-- svelte-ignore a11y-no-static-element-interactions -->
-    <div
-      class={state.classBg}
-      class:bg={!unstyled}
-      on:mousedown={handleOuterMousedown}
-      on:mouseup={handleOuterMouseup}
-      bind:this={background}
-      transition:currentTransitionBg={state.transitionBgProps}
-      style={cssBg}
-    >
-      <div
-        class={state.classWindowWrap}
-        class:wrap={!unstyled}
-        bind:this={wrap}
-        style={cssWindowWrap}
-      >
-        <div
-          class={state.classWindow}
-          class:window={!unstyled}
-          role="dialog"
-          aria-modal="true"
-          aria-label={state.ariaLabelledBy ? null : state.ariaLabel || null}
-          aria-labelledby={state.ariaLabelledBy || null}
-          bind:this={modalWindow}
-          transition:currentTransitionWindow={state.transitionWindowProps}
-          on:introstart={onOpen}
-          on:outrostart={onClose}
-          on:introend={onOpened}
-          on:outroend={onClosed}
-          style={cssWindow}
-        >
-          {#if state.closeButton}
-            {#if isFunction(state.closeButton)}
-              <svelte:component this={state.closeButton} onClose={close} />
-            {:else}
-              <button
-                class={state.classCloseButton}
-                class:close={!unstyled}
-                aria-label="Close modal"
-                on:click={close}
-                style={cssCloseButton}
-              />
-            {/if}
-          {/if}
-          <div
-            class={state.classContent}
-            class:content={!unstyled}
-            style={cssContent}
-          >
-            <svelte:component this={Component} />
-          </div>
-        </div>
+  let topDiv: HTMLDivElement;
+  let visible = false;
+  let prevOnTop: any;
+
+  /**  API **/
+  function open(){
+    if (visible) return;
+    prevOnTop = onTop;
+    onTop = topDiv;
+    
+    //this prevents scrolling of the main window on larger screens
+    document.body.style.overflow="hidden";
+
+    visible=true;
+    //Move the modal in the DOM to be the last child of <BODY> so that it can be on top of everything
+    document.body.appendChild(topDiv);
+  }
+    
+  function close(){
+    onTop = prevOnTop;
+    if (onTop == null) document.body.style.overflow = "";
+    visible = false;
+  }
+    
+  //expose the API
+  modal = {open,close};
+
+    
+</script>
+
+<!-- svelte-ignore a11y-click-events-have-key-events -->
+<div id="topModal" class:visible bind:this={topDiv} on:click={() => close()}>
+	<div id='modal' on:click|stopPropagation={() => {}}>
+		<svg id="close" on:click={() => close()} viewBox="0 0 12 12">
+			<circle cx=6 cy=6 r=6 />
+			<line x1=3 y1=3 x2=9 y2=9 />
+			<line x1=9 y1=3 x2=3 y2=9 />
+		</svg>
+    
+		<div id = "flags">
+      <div class = "flag-container" id = "Greece" on:click={flagClick}>
+        <img src={VectorGreece} alt="Greece">
+        <p class = "flag-name">Ελληνικά</p>
       </div>
+    
+      <div class = "flag-container" id = "USA" on:click={flagClick}>
+        <img src={VectorUSA} alt="USA">
+        <p class = "flag-name">English (USA)</p>
+      </div>
+    
     </div>
-  {/if}
-  <slot />
-  
-  <style>
-    * {
-      box-sizing: border-box;
-    }
-  
-    .bg {
-      position: fixed;
-      z-index: 1000;
-      top: 0;
-      left: 0;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      width: 100vw;
-      height: 100vh;
-      background: rgba(0, 0, 0, 0.66);
-    }
-  
-    .wrap {
-      position: relative;
-      margin: 2rem;
-      max-height: 100%;
-    }
-  
-    .window {
-      position: relative;
-      width: 40rem;
-      max-width: 100%;
-      max-height: 100%;
-      margin: 2rem auto;
-      color: black;
-      border-radius: 0.5rem;
-      background: white;
-    }
-  
-    .content {
-      position: relative;
+	</div>
+</div>
 
-      max-height: calc(100vh - 4rem);
-      overflow: auto;
-    }
-  
-    .close {
-      display: block;
-      box-sizing: border-box;
-      position: absolute;
-      z-index: 1000;
-      top: 1rem;
-      right: 1rem;
-      margin: 0;
-      padding: 0;
-      width: 1.5rem;
-      height: 1.5rem;
-      border: 0;
-      color: black;
-      border-radius: 1.5rem;
-      background: white;
-      box-shadow: 0 0 0 1px black;
-      transition: transform 0.2s cubic-bezier(0.25, 0.1, 0.25, 1),
-        background 0.2s cubic-bezier(0.25, 0.1, 0.25, 1);
-      appearance: none;
-      transform: scale(0.5);
-    }
-  
-    .close:before,
-    .close:after {
-      content: '';
-      display: block;
-      box-sizing: border-box;
-      position: absolute;
-      top: 50%;
-      width: 1rem;
-      height: 1px;
-      background: black;
-      transform-origin: center;
-      transition: height 0.2s cubic-bezier(0.25, 0.1, 0.25, 1),
-        background 0.2s cubic-bezier(0.25, 0.1, 0.25, 1);
-    }
-  
-    .close:before {
-      -webkit-transform: translate(0, -50%) rotate(45deg);
-      -moz-transform: translate(0, -50%) rotate(45deg);
-      transform: translate(0, -50%) rotate(45deg);
-      left: 0.25rem;
-    }
-  
-    .close:after {
-      -webkit-transform: translate(0, -50%) rotate(-45deg);
-      -moz-transform: translate(0, -50%) rotate(-45deg);
-      transform: translate(0, -50%) rotate(-45deg);
-      left: 0.25rem;
-    }
-  
-    .close:active {
-      transform: scale(0.4);
-    }
-  </style>
-  
+
+<style>
+	#topModal {
+		visibility: hidden;
+		z-index: 9999;
+		position: fixed;
+		top: 0;
+		left: 0;
+		right: 0;
+		bottom: 0;
+		background: #4448;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+	}
+	
+	#modal {
+    margin-inline: 1.5em;
+		position: relative;
+		border-radius: 1rem;
+		background: rgb(255, 255, 255);
+		padding: 1em;
+	}
+
+	.visible {
+		visibility: visible !important;
+	}
+
+	#close {
+		position: absolute;
+		top: -0.8rem;
+		right: -0.8rem;
+		width: 1.8rem;
+		height: 1.8rem;
+		cursor: pointer;
+		fill:#F44;
+		transition: transform 3s;
+    filter: drop-shadow(0rem 0rem 1em rgba(255, 0, 0, 0.582))
+	}
+
+	#close line {
+		stroke:#FFF;
+		stroke-width: 0.12em;
+	}
+	
+  #flags{
+    margin-top: 3em;
+    margin-inline: 1em;
+    margin-bottom: 1em;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-between;
+  }
+
+  .flag-container{
+    width: 45%;
+    height:45%;
+  }
+
+  .flag-name{
+    font-size: 0.7em;
+    text-align: center;
+    margin-top: 0.2em;
+  }
+
+</style>
