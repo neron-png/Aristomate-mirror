@@ -91,11 +91,11 @@
 	}
 	
 	#modal {
-    margin-inline: 1.5em;
+    margin-inline: 2.5em;
 		position: relative;
 		border-radius: 1rem;
 		background: rgb(255, 255, 255);
-		padding: 1em;
+		padding: em;
 	}
 
 	.visible {
@@ -110,8 +110,7 @@
 		height: 1.8rem;
 		cursor: pointer;
 		fill:#F44;
-		transition: transform 3s;
-    filter: drop-shadow(0rem 0rem 1em rgba(255, 0, 0, 0.582))
+    filter: drop-shadow(0rem 0rem 1em rgba(255, 0, 0, 0.12))
 	}
 
 	#close line {
@@ -120,18 +119,17 @@
 	}
 	
   #flags{
-    margin-top: 3em;
-    margin-inline: 1em;
-    margin-bottom: 1em;
+    margin-top: 1.5em;
+    margin-inline: -1.5em;
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
-    justify-content: space-between;
+    justify-content: center;
   }
 
   .flag-container{
-    width: 45%;
-    height:45%;
+    width: 35%;
+    margin-inline: 0.75em;
   }
 
   .flag-name{
