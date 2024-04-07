@@ -1,6 +1,7 @@
 <script lang="ts">
 	import AppCard from '$shared/AppCard.svelte';
 	import { fastFood, map, link } from 'ionicons/icons';
+	import { t } from '$lib/translations';
 </script>
 
 
@@ -21,7 +22,7 @@
 		>
 			<div class="appletcontent">
 				<ion-icon icon={fastFood} />
-				<ion-label><span class="overflowingtext">Μενού Λέσχης</span></ion-label>
+				<ion-label><span class="overflowingtext">{$t('slider.menu')}</span></ion-label>
 			</div>
 		</AppCard>
 		<AppCard
@@ -34,7 +35,7 @@
 		>
 			<div class="appletcontent">
 				<ion-icon icon={map} />
-				<ion-label><span class="overflowingtext">Χάρτης ΑΠΘ</span></ion-label>
+				<ion-label><span class="overflowingtext">{$t('slider.map')}</span></ion-label>
 			</div>
 		</AppCard>
 		<AppCard
@@ -47,7 +48,7 @@
 		>
 			<div class="appletcontent">
 				<ion-icon icon={link} />
-				<ion-label><span class="overflowingtext">Σύνδεσμοι</span></ion-label>
+				<ion-label><span class="overflowingtext">{$t('slider.links')}</span></ion-label>
 			</div>
 		</AppCard>
 	</div>

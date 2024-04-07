@@ -17,6 +17,7 @@
   function flagClick(this: any)
   {
     console.log(this.id);
+    document.cookie = `lang=${this.id} ;`
     close();
   }
     
@@ -60,14 +61,14 @@
 		</svg>
     
 		<div id = "flags">
-      <div class = "flag-container" id = "Greece" on:click={flagClick}>
+      <div class = "flag-container" id = "el" on:click={flagClick}>
         <img src={VectorGreece} alt="Greece">
         <p class = "flag-name">Ελληνικά</p>
       </div>
     
-      <div class = "flag-container" id = "USA" on:click={flagClick}>
+      <div class = "flag-container" id = "eng" on:click={flagClick}>
         <img src={VectorUSA} alt="USA">
-        <p class = "flag-name">English (USA)</p>
+        <p class = "flag-name">English (US)</p>
       </div>
     
     </div>

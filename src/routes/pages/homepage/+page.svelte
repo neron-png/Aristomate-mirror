@@ -14,6 +14,7 @@
     import { qrStore } from '$lib/components/wallet/qrStore';
     import type { qrItem } from '$lib/components/wallet/qrItem';
 	import { onMount } from 'svelte';
+	import { t } from '$lib/translations';
 
 	let givenName = '';
 	let gender = '';
@@ -25,6 +26,7 @@
 
 	async function getInfo() {
 		let personalData = await neoUniversisGet('Students/me/');
+		console.log(personalData);
 		givenName = personalData.person.givenName;
 		gender = personalData.person.gender;
 		subjects = (await neoUniversisGet('students/me/courses?$top=-1')).value;
@@ -77,7 +79,7 @@
 					}}
 					aria-label="feedback form"
 				>
-					<ion-label>Early Access Beta - Η γνώμη σου μετράει!</ion-label>
+					<ion-label>Early Access Beta - {$t('home.early_access')}</ion-label>
 					<ion-icon icon={open} />
 				</ion-text>
 			</AnnouncementBanner>
@@ -89,7 +91,7 @@
 						<img class="avatar ion-padding-vertical" alt="man" src={woman} width="200rem" />
 					{/if}
 					<div>
-						<h5 class="h5">Γεια σου</h5>
+						<h5 class="h5">{$t('home.greeting')}</h5>
 						<h5 class="h5"><b>{getVocativeCase(givenName)}!</b></h5>
 					</div>
 				</div>
@@ -111,9 +113,9 @@
 						<ion-grid>
 							{#if $qrStore.length == 0}
 								<ion-col style="display: flex; justify-content: center; margin: 30px;">
-									<ion-input placeholder="Κωδικός QR πάσου" type="number"/>
+									<ion-input placeholder={$t('qr.placeholder')} type="number"/>
 									<ion-button style="text-transform: none; --box-shadow: var(--shadow-sort-md);" color="secondary"
-												on:ionFocus={addQR}>Προσθήκη</ion-button>
+												on:ionFocus={addQR}>{$t('qr.button')}</ion-button>
 								</ion-col>
 							
 							<!-- Uncomment if adding gym pass/id is implemented -->
@@ -141,7 +143,7 @@
 				<AppCard colour="primary" margin={false} href="/pages/grades">
 					<div class="courses-passed">
 						<ion-card-title><b> {passedSubjects}/{subjects} </b></ion-card-title>
-						<ion-card-subtitle>Περασμένα</ion-card-subtitle>
+						<ion-card-subtitle>{$t('home.passed')}</ion-card-subtitle>
 
 						<ion-progress-bar class="progress-courses" />
 					</div>
@@ -151,7 +153,7 @@
 					<div class="avg-grade-grid">
 						<div class="avg-grade">
 							<ion-card-title> <b>{average} </b></ion-card-title>
-							<ion-card-subtitle>M.O.</ion-card-subtitle>
+							<ion-card-subtitle>{$t('home.average')}</ion-card-subtitle>
 						</div>
 						<div>
 							<ion-progress-bar class="progress-avg" />
@@ -159,9 +161,9 @@
 					</div>
 				</AppCard>
 			</div>
-			<p class="info-text"><b>Χρήσιμες πληροφορίες</b></p>
+			<p class="info-text"><b>{$t('home.extra')}</b></p>
 			<AppletsSlides />
-			<p style="margin-top: 1.5rem" class="info-text"><b>Πρόσφατοι βαθμοί</b></p>
+			<p style="margin-top: 1.5rem" class="info-text"><b>{$t('home.grades')}</b></p>
 			<RecentGrades />
 		{:catch error}
 			<p>{error.message}</p>

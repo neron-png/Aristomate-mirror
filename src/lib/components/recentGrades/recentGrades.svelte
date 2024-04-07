@@ -5,6 +5,7 @@
     import GradeCard from "$components/recentGrades/recentGradesCard.svelte";
     import { dismissedGrades } from "$components/recentGrades/dismissedGrades";
     import { refresh } from "ionicons/icons";
+	import { t } from '$lib/translations';
 
     let examPeriod = [];
     /**
@@ -127,7 +128,7 @@
     {#if recentGrades.length === 0}
         <ion-card>
             <ion-card-content>
-                    <p>Δεν υπάρχουν πρόσφατες βαθμολογίες</p>
+                    <p>{$t('home.no_recent')}</p>
             </ion-card-content>
         </ion-card>
     {/if}
