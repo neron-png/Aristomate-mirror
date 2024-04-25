@@ -19,8 +19,9 @@
 	import QRGenerator from '$lib/components/wallet/QRGenerator.svelte';
     import { qrStore } from '$lib/components/wallet/qrStore';
     import type { qrItem } from '$lib/components/wallet/qrItem';
-	import { onMount } from 'svelte';
+	import { onLoad } from 'svelte';
 	import Banner from '$components/shared/banner.svelte';
+	import introJs from 'intro.js/intro.js';
 
 	let givenName = '';
 	let gender = '';
@@ -89,6 +90,25 @@
 			shouldFocus = false;
 		}
 	}
+
+	onLoad(() => {
+		const intro = introJs();
+		console.log("Apostolos Test");
+		intro.setOptions({
+		steps: [
+			{
+				element: '.info-container',
+				intro: 'This is the info container where important information is displayed.'
+			},
+			{
+				element: '.student-id',
+				intro: 'Click here to view student ID details.'
+			}
+		]
+		});
+
+    intro.start(); // Start the guided tour
+  });
 </script>
 
 <ion-tab tab="homepage">
