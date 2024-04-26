@@ -17,43 +17,45 @@ export const config = {
     {
       locale: 'en',
       key: 'home',
-      routes: ['/pages/homepage'],
       loader: async () => (await import('./en/home.json')).default,
     },
     {
       locale: 'en',
       key: 'qr',
-      routes: ['/pages/homepage'],
       loader: async () => (await import('./en/qr.json')).default,
     },
     {
       locale: 'en',
       key: 'slider',
-      routes: ['/pages/homepage'],
       loader: async () => (await import('./en/slider.json')).default,
+    },
+    {
+      locale: 'en',
+      key: 'schedule',
+      loader: async () => (await import('./en/sched.json')).default,
     },
     {
       locale: 'el',
       key: 'home',
-      routes: ['/pages/homepage'],
       loader: async () => (await import('./el/home.json')).default,
     },
     {
       locale: 'el',
       key: 'qr',
-      routes: ['/pages/homepage'],
       loader: async () => (await import('./el/qr.json')).default,
     },
     {
       locale: 'el',
       key: 'slider',
-      routes: ['/pages/homepage'],
       loader: async () => (await import('./el/slider.json')).default,
+    },
+    {
+      locale: 'el',
+      key: 'schedule',
+      loader: async () => (await import('./el/sched.json')).default,
     },
     
   ],
 };
 
 export const { t, loading, locales, locale, translations, loadTranslations, addTranslations, setLocale, setRoute } = new i18n(config);
-
-loading.subscribe(($loading) => $loading && console.log('Loading translations...'));

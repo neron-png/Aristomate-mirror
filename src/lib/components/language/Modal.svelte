@@ -14,10 +14,12 @@
   import VectorGreece from "$lib/components/language/Greece.svg"
   import VectorUSA from "$lib/components/language/USA.svg"
 
+  import { setLocale } from '$lib/translations';
+
   function flagClick(this: any)
   {
-    console.log(this.id);
-    document.cookie = `lang=${this.id} ;`
+    document.cookie = `lang=${this.id};` // for some reason, homepage will go to default locale without this line.
+    setLocale(this.id); // use '$locale' to get the current locale
     close();
   }
     
@@ -66,7 +68,7 @@
         <p class = "flag-name">Ελληνικά</p>
       </div>
     
-      <div class = "flag-container" id = "eng" on:click={flagClick}>
+      <div class = "flag-container" id = "en" on:click={flagClick}>
         <img src={VectorUSA} alt="USA">
         <p class = "flag-name">English (US)</p>
       </div>

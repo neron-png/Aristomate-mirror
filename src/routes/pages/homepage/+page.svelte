@@ -14,7 +14,13 @@
     import { qrStore } from '$lib/components/wallet/qrStore';
     import type { qrItem } from '$lib/components/wallet/qrItem';
 	import { onMount } from 'svelte';
-	import { t } from '$lib/translations';
+	import { t, locale } from '$lib/translations';
+
+	
+    onMount(async() => {
+        let a = $locale;
+        console.log('Locale: ' + a);
+    });
 
 	let givenName = '';
 	let gender = '';

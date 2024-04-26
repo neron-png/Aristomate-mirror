@@ -6,6 +6,9 @@
     import { universisGet } from '$lib/dataService';
     import { getDayByIndex, getDayIndex, weekdays } from "$lib/components/schedule/day/days";
     import { classStore } from '$components/schedule/class/classStore';
+    import { t, locale} from '$lib/translations';
+
+    let l = $locale;
 
     // Clear class store
     // $classStore = [];
@@ -31,7 +34,7 @@
 
 <ion-header collapse="condense" mode="ios">
     <ion-toolbar mode={Capacitor.getPlatform() != 'ios' ? 'md': undefined}>
-      <ion-title class="ion-padding-vertical" size="large">Πρόγραμμα μαθημάτων</ion-title>
+      <ion-title class="ion-padding-vertical" size="large">{$t('schedule.title')}</ion-title>
       <ion-buttons slot="end">
         <ion-button href="/pages/classes/addClass">
           <ion-icon slot="icon-only" icon={add}></ion-icon>
@@ -45,10 +48,10 @@
        <ion-icon icon={ellipsisHorizontalOutline} />
     </ion-fab-button>
     <ion-fab-list side="top">
-       <ion-fab-button color="primary" href="/pages/tasks" data-desc="Συμβάντα">
+       <ion-fab-button color="primary" href="/pages/tasks" data-desc={$t('schedule.events')}>
           <ion-icon icon={createOutline} />
        </ion-fab-button>
-       <ion-fab-button color="secondary" href="/pages/exams" data-desc="Εξετάσεις">
+       <ion-fab-button color="secondary" href="/pages/exams" data-desc={$t('schedule.exams')}>
           <ion-icon icon={schoolOutline} />
        </ion-fab-button>
     </ion-fab-list>
@@ -63,7 +66,7 @@
             {#each weekdays as day}
                 {#each Object.keys(day) as key }
                     <ion-segment-button value={key}>
-                        <ion-label>{getDayByIndex(getDayIndex(key.charAt(0).toUpperCase() + key.slice(1)), 'el', true)}</ion-label>
+                        <ion-label>{getDayByIndex(getDayIndex(key.charAt(0).toUpperCase() + key.slice(1)), l, true)}</ion-label>
                     </ion-segment-button>
                 {/each}
             {/each}
@@ -78,7 +81,7 @@
     <ion-row class="custom-center-label">
         {#if currentClasses.length === 0}
             <ion-icon icon={bookOutline} size="large" style="padding: 15px"></ion-icon>
-            <ion-label>Δεν υπάρχουν προγραμματισμένα μαθήματα αυτή τη μέρα.</ion-label>
+            <ion-label>{$t('schedule.no_class')}</ion-label>
         {/if}
     </ion-row>
 </ion-content>
