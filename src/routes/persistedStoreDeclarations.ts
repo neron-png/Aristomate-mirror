@@ -3,6 +3,7 @@ import { dismissedItems } from "$components/recentResults/dismissedItems";
 import { classStore } from "$components/schedule/class/classStore";
 import { taskStore } from "$components/schedule/task/taskStore";
 import { qrStore } from "$components/wallet/qrStore";
+import { firstBootStore } from "$components/homepage/BootStore";
 import { userCreds, userTokens } from "$stores/credentials.store";
 import type CapacitorPersistedStore from "$lib/storage/capacitorPersistedStore";
 
@@ -14,6 +15,7 @@ const persistedStores: CapacitorPersistedStore<any>[] = [
     taskStore,
     qrStore,
     userTokens,
+    firstBootStore,
     // Add new stores here
 ];
 

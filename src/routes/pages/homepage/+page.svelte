@@ -12,6 +12,7 @@
 	import RecentItems from '$components/recentResults/recents.svelte';
 	import HomepageSkeleton from '$lib/components/homepage/homepageSkeleton.svelte';
 	import AnnouncementBanner from '$shared/announcementBanner.svelte';
+	import ItemPopup from '$components/homepage/firstTimeGuide.svelte';
 
 	import { goto } from '$app/navigation';
 
@@ -96,6 +97,7 @@
 		{#await getInfo()}
 			<HomepageSkeleton />
 		{:then}
+		<ItemPopup />
 			<!-- <AnnouncementBanner>
 				<ion-text
 					color="light"
