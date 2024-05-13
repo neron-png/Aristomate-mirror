@@ -33,6 +33,8 @@
 </script>
 
 {#if showGuide}
+<div class="blur-effect-overlay"></div>
+
 <div class="guide">
  <div class="main-content">
 	  <button class="close-button" on:click={() => (showGuide = false)}>
@@ -63,6 +65,17 @@
 {/if}
 
 <style>
+  .blur-effect-overlay{
+    position: fixed; 
+    top: 0; 
+    bottom: 0; 
+    width: 100%; 
+    height: 100%; 
+    background-color: rgba(0, 0, 0, 0,5); 
+    backdrop-filter: blur(8px); 
+    z-index: 999;
+  }
+
   .guide {
     position: fixed;
     top: 20%;
