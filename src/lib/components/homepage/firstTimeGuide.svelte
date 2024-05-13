@@ -109,7 +109,6 @@
     overflow-x: hidden;
     width: 100%;
     position: relative;
-    transition: transform 0.3s ease;
   }
 
   .close-button{
@@ -129,7 +128,6 @@
     padding: 5%;
     box-sizing: border-box;
     opacity: 0.8;
-    transition: opacity 0.5s ease;
     display: none;
   }
 
