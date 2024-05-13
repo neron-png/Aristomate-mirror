@@ -51,6 +51,10 @@
 	    {/each}
 	  </div>
   </div>
+
+  <button on:click={() => changeSlide('next')} id="next-slide-button">
+	Δείξε μου!
+  </button>
   <div class="dots">
       {#each slides as slide, index (slide.id)}
         <div
@@ -114,6 +118,8 @@
 
   .title-of-slide{
     color: var(--ion-color-primary); 
+    font-size: 4vh;
+    font-weight: bold; 
   }
 
   .slide {
@@ -130,6 +136,16 @@
   .slide.selected {
     display: block;
     opacity: 1;
+  }
+
+  #next-slide-button{
+    background-color: var(--ion-color-primary); 
+    border-radius: 4vw; 
+    color: var(--ion-color-primary-contrast); 
+    margin: 8vh; 
+    padding: 2vh; 
+    font-size: 2.5vh;
+    font-weight: bold; 
   }
 
  .dots { 
