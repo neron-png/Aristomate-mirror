@@ -86,7 +86,6 @@
     bottom: 20%;
     left: 5%; 
     right: 5%; 
-/*    transform: translate(-50%, -50%); */
     padding: 5%;
     background-color: var(--ion-color-primary-contrast);
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.8);
@@ -164,17 +163,5 @@
 
   .dot.selected {
     background-color: var(--ion-color-primary); /* Active dot color */
-  }
-
-  #arrow-icon-back {
-    order: 1;
-  }
-
-  #arrow-icon-forward {
-    order: 3; /* Adjust order to place forward arrow at the end */
-  }
-
-  button:hover {
-    background-color: var(--ion-color-primary);
   }
 </style>
