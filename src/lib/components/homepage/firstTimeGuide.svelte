@@ -133,6 +133,13 @@
   .slide.selected {
     display: block;
     opacity: 1;
+    animation: fadeInOut 0.5s ease-in-out forwards;
+  }
+
+  @keyframes fadeInOut {
+    0% { opacity: 0; }
+    50% { opacity: 0.5; }
+    100% { opacity: 1; }
   }
 
   #next-slide-button{
