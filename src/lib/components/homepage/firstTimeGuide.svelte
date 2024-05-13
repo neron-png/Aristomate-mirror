@@ -8,9 +8,10 @@
   let currentSlide = 0;
 
   const slides = [
-    { id: 1, content: 'Slide 1 Content' },
-    { id: 2, content: 'Slide 2 Content' },
-    { id: 3, content: 'Slide 3 Content' }
+    { id: 1,title: "Καλώς όρισες στο Aristomate ", content: 'Υπάρχουν πολλές λειτουργίες που πρέπει να ανακαλύψεις!' },
+    { id: 2,title: "Πορτοφόλι", content: 'Τώρα μπορείς να αποθηκεύσεις το ακαδημαικό σου πάσο στην εφαρμογή' },
+    { id: 3,title: "Menu λέσχης", content: 'Μπορείς να μάθεις τι έχει για σήμερα η λέσχη του ΑΠΘ' },
+    { id: 4,title: "Χάρτες", content: 'Δεν χρειάζεται πλέον να ψάχνεσαι, έχεις στην διάθεση σου κάθε τοποθεσία του ΑΠΘ εδω!'}
   ];
 
   function changeSlide(direction) {
@@ -33,21 +34,22 @@
 
 {#if showGuide}
 <div class="guide">
-  <button on:click={() => (showGuide = false)}>
-    <ion-icon icon={close} />
-  </button>
-  <div class="carousel">
-    {#each slides as slide, index (slide.id)}
-      <div class="slide" id={'slide' + slide.id} class:selected={index === currentSlide}>
-        {slide.content}
-      </div>
-    {/each}
+ <div class="main-content">
+	  <button class="close-button" on:click={() => (showGuide = false)}>
+	    <ion-icon icon={close} />
+	  </button>
+
+	  <div class="carousel">
+	    {#each slides as slide, index (slide.id)}
+	      <div class="slide" id={'slide' + slide.id} class:selected={index === currentSlide}>
+		<h3 class="title-of-slide">{slide.title}</h3>
+		<br>
+		{slide.content}
+	      </div>
+	    {/each}
+	  </div>
   </div>
-  <div class="controls">
-    <button on:click={() => changeSlide('prev')}>
-      <ion-icon id="arrow-icon-back" icon={arrowBack} />
-    </button>
-    <div class="dots">
+  <div class="dots">
       {#each slides as slide, index (slide.id)}
         <div
           class="dot"
@@ -56,24 +58,33 @@
         ></div>
       {/each}
     </div>
-    <button on:click={() => changeSlide('next')}>
-      <ion-icon id="arrow-icon-forward" icon={arrowForward} />
-    </button>
-  </div>
+
 </div>
 {/if}
 
 <style>
   .guide {
     position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    padding: 20px;
+    top: 20%;
+    bottom: 20%;
+    left: 5%; 
+    right: 5%; 
+/*    transform: translate(-50%, -50%); */
+    padding: 5%;
     background-color: var(--ion-color-primary-contrast);
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.8);
     border-radius: 15px;
     z-index: 1000;
+    display: flex; 
+    flex-direction: column; 
+    justify-content: space-between; 
+  }
+
+  .main-content{
+    display: flex; 
+    flex-direction: column; 
+    align-self: stretch; 
+    flex: 1; 
   }
 
   .carousel {
@@ -84,9 +95,19 @@
     transition: transform 0.3s ease;
   }
 
+  .close-button{
+    align-self: flex-start; 
+  }
+
+  .title-of-slide{
+    color: var(--ion-color-primary); 
+  }
+
   .slide {
+    align-self: flex-center; 
     min-width: 100%;
-    padding: 20px;
+    text-align: center;
+    padding: 5%;
     box-sizing: border-box;
     opacity: 0.8;
     transition: opacity 0.5s ease;
@@ -98,21 +119,16 @@
     opacity: 1;
   }
 
-  .controls {
+ .dots { 
     display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-top: 20px;
-  }
-
-  .dots {
-    display: flex;
-    align-items: center; /* Align dots vertically centered with arrows */
+    justify-content: center; 
+    align-items: flex-end; 
+    margin-top: auto; 
   }
 
   .dot {
-    width: 10px;
-    height: 10px;
+    width: 2.5vw;
+    height: 2.5vw;
     border-radius: 50%;
     margin: 0 5px;
     background-color: var(--ion-color-medium); /* Inactive dot color */
