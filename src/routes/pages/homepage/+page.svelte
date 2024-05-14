@@ -18,8 +18,7 @@
 
 	
     onMount(async() => {
-        let a = $locale;
-        console.log('Locale: ' + a);
+        console.log('Locale: ' + $locale);
     });
 
 	let givenName = '';
