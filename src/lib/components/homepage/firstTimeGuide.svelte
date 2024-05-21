@@ -37,9 +37,9 @@
 
 <div class="guide">
  <div class="main-content">
-	  <button class="close-button" on:click={() => (showGuide = false)}>
-	    <ion-icon icon={close} />
-	  </button>
+	<ion-chip style="background-color: transparent;">
+	  <ion-icon icon={close} style="font-size: 1.5rem; margin: 0;" on:click={() => (showGuide = false)} aria-hidden/>
+	</ion-chip>
 
 	  <div class="carousel">
 	    {#each slides as slide, index (slide.id)}
@@ -82,8 +82,8 @@
 
   .guide {
     position: fixed;
-    top: 20%;
-    bottom: 20%;
+    top: 17%;
+    bottom: 17%;
     left: 5%; 
     right: 5%; 
     padding: 5%;
