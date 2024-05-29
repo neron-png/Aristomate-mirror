@@ -35,6 +35,11 @@ export const config = {
       loader: async () => (await import('./en/sched.json')).default,
     },
     {
+      locale: 'en',
+      key: 'personal',
+      loader: async () => (await import('./en/personal.json')).default,
+    },
+    {
       locale: 'el',
       key: 'home',
       loader: async () => (await import('./el/home.json')).default,
@@ -53,6 +58,11 @@ export const config = {
       locale: 'el',
       key: 'schedule',
       loader: async () => (await import('./el/sched.json')).default,
+    },
+    {
+      locale: 'el',
+      key: 'personal',
+      loader: async () => (await import('./el/personal.json')).default,
     },
     
   ],

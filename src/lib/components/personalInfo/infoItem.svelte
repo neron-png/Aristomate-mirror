@@ -4,6 +4,14 @@
 	import * as allIonicIcons from 'ionicons/icons';
 	import Settings from "./settings.svelte";
 
+	import { t, locale } from '$lib/translations';
+	import { getSemesterNPostfix } from '$lib/globalFunctions/getSemsterPostfix';
+
+	$: lang = $locale;
+
+	$: labelContent = `${getSemesterNPostfix(semester, lang)}${$t('personal.semester')}`;
+
+
 	/**
 	 * @type {string}
 	 */
@@ -116,7 +124,7 @@
 			<ion-item>
 				<ion-icon size="small" icon={allIonicIcons.maleFemale} />
 
-				<ion-label class="ion-padding-start">{gender === 'Α' ? 'Άντρας' : 'Γυναίκα'}</ion-label>
+				<ion-label class="ion-padding-start">{gender === 'Α' ? $t('personal.male') : $t('personal.female') }</ion-label>
 			</ion-item>
 			{/if}
 
@@ -133,7 +141,7 @@
 			<ion-item lines="none">
 				<ion-icon size="small" icon={allIonicIcons.analytics} />
 
-				<ion-label class="ion-padding-start">{semester}ο Εξάμηνο</ion-label>
+				<ion-label class="ion-padding-start">{labelContent}</ion-label>
 			</ion-item>
 			{/if}
 
